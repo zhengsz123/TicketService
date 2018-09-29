@@ -36,7 +36,7 @@
                 <configuration>
                     <driver>org.postgresql.Driver</driver>
                     <!--url parameterize-->
-                    <url>jdbc:postgresql://localhost:5432/template1</url>
+                    <url>jdbc:postgresql://localhost:5432/ticketservice2</url>
                     <user>admin</user>
                     <password>password</password>
                     <locations>

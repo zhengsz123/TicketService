@@ -12,6 +12,7 @@ public class Seat {
     @GeneratedValue(strategy = SEQUENCE, generator = "seats_id_seq")
     @SequenceGenerator(name = "seats_id_seq", sequenceName = "seats_id_seq")
     private long id;
+
     @Column(name = "col")
     @NotNull
     private Integer col;
