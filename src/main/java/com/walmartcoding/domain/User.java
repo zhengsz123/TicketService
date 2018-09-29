@@ -1,7 +1,4 @@
 package com.walmartcoding.domain;
-
-
-
 import javax.persistence.*;
 import static javax.persistence.GenerationType.SEQUENCE;
 
@@ -15,30 +12,14 @@ public class User {
     private long id;
 
     @Column(name="first_name")
-    private String firstname;
+    private String firstName;
     @Column(name="last_name")
-    private String lastname;
+    private String lastName;
     @Column(name="email")
     private String email;
 
     public long getId() {
         return id;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
     }
 
     public String getEmail() {
@@ -47,5 +28,22 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

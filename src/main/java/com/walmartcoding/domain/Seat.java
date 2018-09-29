@@ -6,22 +6,23 @@ import javax.validation.constraints.NotNull;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 @Entity
-@Table(name = "users")
+@Table(name = "seats")
 public class Seat {
     @Id
     @GeneratedValue(strategy = SEQUENCE, generator = "seats_id_seq")
     @SequenceGenerator(name = "seats_id_seq", sequenceName = "seats_id_seq")
     private long id;
     @Column(name = "col")
-    private int col;
-    @Column(name = "row")
-    private int row;
-    @Column(name = "status")
-    private String status;
-
     @NotNull
+    private Integer col;
+    @Column(name = "row")
+    @NotNull
+    private Integer row;
+    @Column(name = "status")
+    private Integer status=SeatStatus.EMPTY.ordinal();
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "users_id")
+    @JoinColumn(name = "users_id")
     private User user;
 
     public long getId() {
@@ -32,23 +33,24 @@ public class Seat {
         return col;
     }
 
-    public void setCol(int col) {
-        this.col = col;
-    }
-
     public int getRow() {
         return row;
     }
 
-    public void setRow(int row) {
+    public void setCol(Integer col) {
+        this.col = col;
+    }
+
+    public void setRow(Integer row) {
         this.row = row;
     }
 
-    public String getStatus() {
+
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
