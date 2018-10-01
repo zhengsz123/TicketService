@@ -1,6 +1,9 @@
-package com.walmartcoding;
+package com.walmartcoding.service;
 
+import com.walmartcoding.domain.Seat;
 import com.walmartcoding.domain.User;
+
+import java.util.List;
 
 public interface TicketService {
         /**
@@ -17,7 +20,7 @@ public interface TicketService {
          * @return a SeatHold object identifying the specific seats and related
         information
          */
-        User findAndHoldSeats(int numSeats, String customerEmail);
+        List<Seat> findAndHoldSeats(int numSeats, String customerEmail);
         /**
          * Commit seats held for a specific customer
          *

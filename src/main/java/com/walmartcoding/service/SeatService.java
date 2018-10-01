@@ -1,14 +1,15 @@
 package com.walmartcoding.service;
 
-import com.walmartcoding.TicketService;
 import com.walmartcoding.domain.Seat;
 import com.walmartcoding.domain.SeatStatus;
-import com.walmartcoding.domain.User;
 import com.walmartcoding.repository.SeatsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -17,6 +18,8 @@ public class SeatService implements TicketService {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private SeatsRepository seatsRepository;
+    @Autowired
+    private UserService userService;
 
     public void insertSeatsData() {
         for (Integer i = 1; i <= 9; i++) {
@@ -30,29 +33,24 @@ public class SeatService implements TicketService {
         }
     }
 
-    /**
-     * The number of seats in the venue that are neither held nor reserved
-     *
-     * @return the number of tickets available in the venue
-     */
     @Override
     public int numSeatsAvailable() {
         Integer num = seatsRepository.countSeatsByStatus(SeatStatus.EMPTY.ordinal());
         return num;
     }
 
-    /**
-     * Find and hold the best available seats for a customer
-     *
-     * @param numSeats      the number of seats to find and hold
-     * @param customerEmail unique identifier for the customer
-     * @return a SeatHold object identifying the specific seats and related
-     * information
-     */
     @Override
-    public User findAndHoldSeats(int numSeats, String customerEmail) {
-        User user = new User();
-        return user;
+    public List<Seat> findAndHoldSeats(int numSeats, String customerEmail) {
+        List<Seat> reservedSeatList = new ArrayList<>();
+        List<Seat> seatList = seatsRepository.findSeatsByStatus(SeatStatus.EMPTY.ordinal());
+        for (int i = 0; i < numSeats; i++) {
+            Seat seat = seatList.get(i);
+            seat.setStatus(SeatStatus.RESERVERED.ordinal());
+            seat.setUser(userService.findByEmail(customerEmail));
+            seatsRepository.save(seat);
+            reservedSeatList.add(seat);
+        }
+        return reservedSeatList;
     }
 
     /**
@@ -68,6 +66,5 @@ public class SeatService implements TicketService {
 
         return customerEmail;
     }
-
 
 }
