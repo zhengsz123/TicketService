@@ -36,7 +36,7 @@
                 <configuration>
                     <driver>org.postgresql.Driver</driver>
                     <!--url parameterize-->
-                    <url>jdbc:postgresql://localhost:5432/ticketservice2</url>
+                    <url>jdbc:postgresql://localhost:5432/devtest1</url>
                     <user>admin</user>
                     <password>password</password>
                     <locations>
@@ -239,6 +239,13 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
 

@@ -10,7 +10,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 public class Seat {
     @Id
     @GeneratedValue(strategy = SEQUENCE, generator = "seats_id_seq")
-    @SequenceGenerator(name = "seats_id_seq", sequenceName = "seats_id_seq")
+    @SequenceGenerator(name = "seats_id_seq", sequenceName = "seats_id_seq",allocationSize = 1)
     private long id;
 
     @Column(name = "col")
@@ -30,11 +30,11 @@ public class Seat {
         return id;
     }
 
-    public int getCol() {
+    public Integer getCol() {
         return col;
     }
 
-    public int getRow() {
+    public Integer getRow() {
         return row;
     }
 
@@ -46,10 +46,7 @@ public class Seat {
         this.row = row;
     }
 
-
-    public Integer getStatus() {
-        return status;
-    }
+    public Integer getStatus() { return status; }
 
     public void setStatus(Integer status) {
         this.status = status;
