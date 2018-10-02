@@ -1,14 +1,14 @@
 package com.walmartcoding.Utils;
 
-import com.walmartcoding.service.SeatService;
+import com.walmartcoding.service.TicketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class SeedData {
     @Autowired
-    private SeatService seatService;
+    private TicketServiceImpl ticketServiceImpl;
 
     public static void main(String[] args){
         SeedData seedData = new SeedData();
-        seedData.seatService.insertSeatsData();
+        seedData.ticketServiceImpl.insertSeatsData();
     }
 }

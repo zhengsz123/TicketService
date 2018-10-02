@@ -189,6 +189,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!--SPRING JMS-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+            <version>4.3.3.RELEASE</version>
+        </dependency>
+
         <!--Hibernate-->
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
