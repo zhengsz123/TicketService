@@ -8,6 +8,8 @@ import com.walmartcoding.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -71,5 +73,16 @@ public class TicketServiceImpl implements TicketService {
         user.setConfirmationCode(confirmationCode.toString());
         userRepository.save(user);
         return confirmationCode.toString();
+    }
+
+    @Autowired
+    private JmsTemplate jmsTemplate;
+    public void sendMessage(String message){
+        jmsTemplate.convertAndSend("worker",message);
+    }
+
+    @JmsListener(destination = "worker", containerFactory = "myFactory")
+    public void receiveMessage(String message) {
+        System.out.println("Received <" + message  + ">");
     }
 }

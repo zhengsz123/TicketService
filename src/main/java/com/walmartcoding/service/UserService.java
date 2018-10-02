@@ -15,5 +15,4 @@ public class UserService {
         User user = userRepository.findByEmail(email);
         return user;
     }
-
 }
