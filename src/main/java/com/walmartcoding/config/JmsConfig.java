@@ -1,7 +1,8 @@
 package com.walmartcoding.config;
 
-import javax.jms.ConnectionFactory;
 
+import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,29 +10,31 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
-import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
-import org.springframework.jms.support.converter.MessageConverter;
-import org.springframework.jms.support.converter.MessageType;
+import org.springframework.jms.core.JmsTemplate;
 
 @Configuration
 @EnableJms
 @ComponentScan(basePackages ="com.walmartcoding")
 public class JmsConfig {
+
     @Bean
-    public JmsListenerContainerFactory<?> myFactory(ConnectionFactory connectionFactory,
-                                                    DefaultJmsListenerContainerFactoryConfigurer configurer) {
+    public ActiveMQConnectionFactory activeMQConnectionFactory() {
+        ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616","admin","password123");
+        return activeMQConnectionFactory;
+    }
+
+    @Bean
+    public JmsListenerContainerFactory<?> myFactory(@Autowired ActiveMQConnectionFactory activeMQConnectionFactory, DefaultJmsListenerContainerFactoryConfigurer configurer) {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-        configurer.configure(factory, connectionFactory);
+        configurer.configure(factory, activeMQConnectionFactory);
         return factory;
     }
 
-    @Bean // Serialize message content to json using TextMessage
-    public MessageConverter jacksonJmsMessageConverter() {
-        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-        converter.setTargetType(MessageType.TEXT);
-        converter.setTypeIdPropertyName("_type");
-        return converter;
+    @Bean
+    public JmsTemplate jmsTemplate(@Autowired ActiveMQConnectionFactory activeMQConnectionFactory) {
+        JmsTemplate jmsTemplate = new JmsTemplate(activeMQConnectionFactory);
+        jmsTemplate.setDeliveryDelay(30000);
+        return jmsTemplate;
     }
-
 
 }

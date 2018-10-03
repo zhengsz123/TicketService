@@ -25,7 +25,6 @@ public class UserController {
     @ResponseBody
     public String confirmReservation(@RequestParam("numOfSeats") int numOfSeats, @RequestParam("email") String email ){
         String confirmation = "Thanks for your purchase, your confirmation code is "+ticketService.reserveSeats(numOfSeats,email);
-        ticketService.sendMessage(email);
         return confirmation;
     }
 }

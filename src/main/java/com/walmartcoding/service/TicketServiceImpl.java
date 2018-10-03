@@ -57,13 +57,17 @@ public class TicketServiceImpl implements TicketService {
             seatsRepository.save(seat);
             holdSeatList.add(seat);
         }
+        jmsTemplate.convertAndSend("worker", customerEmail);
         return holdSeatList;
     }
+
+    @Autowired
+    private JmsTemplate jmsTemplate;
 
     @Override
     public String reserveSeats(int seatHoldId, String customerEmail) {
         List<Seat> reserveredList = seatsRepository.findByUser(userService.findByEmail(customerEmail).getId());
-        for(int i = 0 ; i< reserveredList.size();i++){
+        for (int i = 0; i < reserveredList.size(); i++) {
             Seat seat = reserveredList.get(i);
             seat.setStatus(SeatStatus.RESERVERED.ordinal());
             seatsRepository.save(seat);
@@ -75,14 +79,18 @@ public class TicketServiceImpl implements TicketService {
         return confirmationCode.toString();
     }
 
-    @Autowired
-    private JmsTemplate jmsTemplate;
-    public void sendMessage(String message){
-        jmsTemplate.convertAndSend("worker",message);
-    }
-
     @JmsListener(destination = "worker", containerFactory = "myFactory")
     public void receiveMessage(String message) {
-        System.out.println("Received <" + message  + ">");
+        if (userRepository.findByEmail(message).getConfirmationCode() == null) {
+            List<Seat> holdList = seatsRepository.findSeatsByStatus(SeatStatus.HOLD.ordinal());
+            for (int i = 0; i < holdList.size(); i++) {
+                Seat seat = holdList.get(i);
+                seat.setStatus(SeatStatus.EMPTY.ordinal());
+                seat.setUser(null);
+                seatsRepository.save(seat);
+            }
+        }
+
+        logger.debug("Received <" + message + ">");
     }
 }

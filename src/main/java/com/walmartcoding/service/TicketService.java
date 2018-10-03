@@ -1,7 +1,6 @@
 package com.walmartcoding.service;
 
 import com.walmartcoding.domain.Seat;
-import com.walmartcoding.domain.User;
 
 import java.util.List;
 

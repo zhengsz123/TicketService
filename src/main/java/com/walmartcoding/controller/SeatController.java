@@ -17,15 +17,15 @@ public class SeatController {
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     @ResponseBody
     public String getSeatStatus() {
-    int seatsAvailable = ticketServiceImpl.numSeatsAvailable();
-    String result = "There are " + Integer.toString(seatsAvailable) + " seats available to pick.";
-    return result;
+        int seatsAvailable = ticketServiceImpl.numSeatsAvailable();
+        String result = "There are " + Integer.toString(seatsAvailable) + " seats available to pick.";
+        return result;
     }
 
     @RequestMapping(value = "/status", method = RequestMethod.PATCH)
     @ResponseBody
     public List<Seat> updateStatus(@RequestParam("numOfSeats") int numOfSeats, @RequestParam("email") String email) {
-        List<Seat> reservedSeats = ticketServiceImpl.findAndHoldSeats(numOfSeats,email);
+        List<Seat> reservedSeats = ticketServiceImpl.findAndHoldSeats(numOfSeats, email);
         return reservedSeats;
     }
 }
