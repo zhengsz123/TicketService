@@ -2,6 +2,7 @@ package com.walmartcoding.controller;
 
 import com.walmartcoding.domain.User;
 import com.walmartcoding.repository.UserRepository;
+import com.walmartcoding.service.TicketService;
 import com.walmartcoding.service.TicketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,7 +14,7 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private TicketServiceImpl ticketService;
+    private TicketService ticketService;
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     @ResponseBody

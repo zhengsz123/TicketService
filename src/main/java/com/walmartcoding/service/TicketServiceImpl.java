@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.UUID;
 
 
 @Service
-public class TicketServiceImpl implements TicketService {
+public class TicketServiceImpl implements TicketService<Seat> {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
@@ -27,6 +28,9 @@ public class TicketServiceImpl implements TicketService {
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
 
     public void insertSeatsData() {
         for (Integer i = 1; i <= 9; i++) {
@@ -41,12 +45,20 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional
     public int numSeatsAvailable() {
         Integer num = seatsRepository.countSeatsByStatus(SeatStatus.EMPTY.ordinal());
         return num;
     }
 
+
+    @Transactional
+    public void save(Seat seat){
+        seatsRepository.save(seat);
+    }
+
     @Override
+    @Transactional
     public List<Seat> findAndHoldSeats(int numSeats, String customerEmail) {
         List<Seat> holdSeatList = new ArrayList<>();
         List<Seat> seatList = seatsRepository.findSeatsByStatus(SeatStatus.EMPTY.ordinal());
@@ -61,10 +73,8 @@ public class TicketServiceImpl implements TicketService {
         return holdSeatList;
     }
 
-    @Autowired
-    private JmsTemplate jmsTemplate;
-
     @Override
+    @Transactional
     public String reserveSeats(int seatHoldId, String customerEmail) {
         List<Seat> reserveredList = seatsRepository.findByUser(userService.findByEmail(customerEmail).getId());
         for (int i = 0; i < reserveredList.size(); i++) {
@@ -79,7 +89,8 @@ public class TicketServiceImpl implements TicketService {
         return confirmationCode.toString();
     }
 
-    @JmsListener(destination = "worker", containerFactory = "myFactory")
+    @JmsListener(destination = "worker")
+    @Override
     public void receiveMessage(String message) {
         if (userRepository.findByEmail(message).getConfirmationCode() == null) {
             List<Seat> holdList = seatsRepository.findSeatsByStatus(SeatStatus.HOLD.ordinal());

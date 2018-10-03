@@ -1,6 +1,7 @@
 package com.walmartcoding.controller;
 
 import com.walmartcoding.domain.Seat;
+import com.walmartcoding.service.TicketService;
 import com.walmartcoding.service.TicketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,7 +13,7 @@ import java.util.List;
 @RequestMapping(value = {"/api/seat"}, produces = MediaType.APPLICATION_JSON_VALUE)
 public class SeatController {
     @Autowired
-    TicketServiceImpl ticketServiceImpl;
+    private TicketService ticketServiceImpl;
 
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     @ResponseBody
