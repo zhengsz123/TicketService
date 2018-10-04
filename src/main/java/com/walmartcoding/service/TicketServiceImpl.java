@@ -8,6 +8,7 @@ import com.walmartcoding.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,22 @@ public class TicketServiceImpl implements TicketService<Seat> {
     private UserRepository userRepository;
     @Autowired
     private JmsTemplate jmsTemplate;
+    @Value("#{databaseProperties['db.row']}")
+    private Integer row;
+    @Value("#{databaseProperties['db.col']}")
+    private Integer col;
 
+    @Transactional
+    public void insertSeatsData() {
+        for (Integer i = 1; i <= row; i++) {
+            for (Integer j = 1; j <= col; j++) {
+                Seat seat = new Seat();
+                seat.setRow(i);
+                seat.setCol(j);
+                seatsRepository.save(seat);
+            }
+        }
+    }
     @Override
     @Transactional
     public int numSeatsAvailable() {
@@ -65,7 +81,7 @@ public class TicketServiceImpl implements TicketService<Seat> {
         List<Seat> reserveredList = seatsRepository.findByUser(userService.findByEmail(customerEmail).getId());
         for (int i = 0; i < reserveredList.size(); i++) {
             Seat seat = reserveredList.get(i);
-            seat.setStatus(SeatStatus.RESERVERED.ordinal());
+            seat.setStatus(SeatStatus.RESERVED.ordinal());
             seatsRepository.save(seat);
         }
         UUID confirmationCode = UUID.randomUUID();

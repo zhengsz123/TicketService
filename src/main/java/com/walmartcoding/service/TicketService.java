@@ -5,7 +5,7 @@ import com.walmartcoding.domain.Seat;
 import java.util.List;
 
 public interface TicketService<T> {
-
+        void insertSeatsData();
          void save(T t);
         /**
          * The number of seats in the venue that are neither held nor reserved

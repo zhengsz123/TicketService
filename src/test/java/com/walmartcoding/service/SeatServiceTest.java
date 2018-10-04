@@ -1,6 +1,6 @@
 package com.walmartcoding.service;
 
-import com.walmartcoding.Utils.SeedData;
+
 import com.walmartcoding.config.AppConfig;
 import com.walmartcoding.config.DatabaseConfig;
 import com.walmartcoding.domain.Seat;
@@ -53,8 +53,7 @@ public class SeatServiceTest {
     @Test
     @Transactional
     public void insertSeatsDataTest() {
-        SeedData seedData = new SeedData();
-        seedData.insertSeatsData();
+        ticketService.insertSeatsData();
         int seatsNum = seatsRepository.countSeatsByStatus(SeatStatus.EMPTY.ordinal());
         assertEquals(col*row, seatsNum);
     }
@@ -93,7 +92,7 @@ public class SeatServiceTest {
         userRepository.save(user);
         seatsRepository.save(seat);
         ticketService.reserveSeats(1, emailTest);
-        assertEquals(SeatStatus.RESERVERED.ordinal(), seatsRepository.findByUser(userRepository.findByEmail(emailTest).
+        assertEquals(SeatStatus.RESERVED.ordinal(), seatsRepository.findByUser(userRepository.findByEmail(emailTest).
                 getId()).get(0).getStatus().intValue());
         assertNotNull(userRepository.findByEmail(emailTest).getConfirmationCode());
     }
