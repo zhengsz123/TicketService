@@ -164,7 +164,7 @@ ResponseEntity:
 	
 ### Testing Results
 ---
-Tests are done using JUnit. Tests are run using the command
+Tests are done using JUnit and Mockito. Tests are run using the command
 
 ```
 mvn compile test -Dspring.profiles.active=unit
