@@ -74,8 +74,12 @@ which means all selected seats' status will become EMPTY again, and the correspo
     ```
     java -jar target/ticketservice-1.0-SNAPSHOT.jar -Dspring.profiles.active=prod --spring.datasource.url=jdbc:postgresql://localhost:5432/ticker_service_demo --spring.datasource.username=admin --spring.datasource.password=password
     ```
-### RESTful Web Services
+### WebServiceDemo
 ---
+Seat data seeded into database
+
+ ![seededData](https://github.com/zhengsz123/TicketService/blob/master/WebServiceDEMO/Seeded%20data.png)
+
 1.  User sign up to get email 
     ```
     POST - http://localhost:8080/api/user/signup
@@ -88,6 +92,8 @@ which means all selected seats' status will become EMPTY again, and the correspo
       "email":"zhengsz@vt.edu"
     }
     ```
+ ![userSignedUp](https://github.com/zhengsz123/TicketService/blob/master/WebServiceDEMO/Seeded%20data.png)    
+
 2.	Find the number of seats available within the venue,
 	Note: available seats are seats that are neither held nor reserved.
 	* Total seats available in all venues:
@@ -95,7 +101,7 @@ which means all selected seats' status will become EMPTY again, and the correspo
 		```
 		GET - http://localhost:8080/api/seat/status
 		```
-		
+ ![FindNumOfSeats](https://github.com/zhengsz123/TicketService/blob/master/WebServiceDEMO/findNumOfSeatsEmpty.png)
 3.	Find and hold the best available seats on behalf of a customer, 
 	Note: each ticket hold should expire within 30 seconds.
 	In the demo I pass numOfSeats as 2 and email as user's email using @PathPram.
@@ -103,13 +109,12 @@ which means all selected seats' status will become EMPTY again, and the correspo
 	    ```
 	     PATCH - http://localhost:8080/api/seat/status?numOfSeats=2&email=zhengsz@vt.edu   
 	    ```
-	
 	ResponseEntity:
 	```
     [
         {
-            "id": 3,
-            "col": 3,
+            "id": 5,
+            "col": 5,
             "row": 1,
             "status": 1,
             "user": {
@@ -121,8 +126,8 @@ which means all selected seats' status will become EMPTY again, and the correspo
             }
         },
         {
-            "id": 4,
-            "col": 4,
+            "id": 6,
+            "col": 6,
             "row": 1,
             "status": 1,
             "user": {
@@ -137,11 +142,10 @@ which means all selected seats' status will become EMPTY again, and the correspo
 	  
 	```
 	
-	![holdSeats](https://github.com/vamshins/ticket-booking-service/blob/master/img/holdSeats.JPG)
+ ![findAndHoldSeats](https://github.com/zhengsz123/TicketService/blob/master/WebServiceDEMO/findAndHoldSeats.png)
 	
-	This request will expire after 60 seconds. Before that, user has to reserve the seats using the web service in the following request.
-	
-3.	Reserve and commit a specific group of held seats for a customer
+4.This request will expire after 30 seconds. Before that, user has to reserve the seats using the web service in the following request.
+	Reserve and commit a specific group of held seats for a customer
 
 	    ```
         PATCH - http://localhost:8080/api/user/confirmed?numOfSeats=2&email=zhengsz@vt.edu	
@@ -157,9 +161,11 @@ which means all selected seats' status will become EMPTY again, and the correspo
         "confirmationCode": "a2fa2bce-4e69-4705-9826-1cc728d35594"
     }
 	```
-	
-	![reserveSeats](https://github.com/vamshins/ticket-booking-service/blob/master/img/reserveSeats.JPG)
-4. After the reservation, this is what we get from database for the user info and the selected seats.
+![reserveSeats](https://github.com/zhengsz123/TicketService/blob/master/WebServiceDEMO/reservedSeats.png)
+
+5.After the reservation, this is what we get from database for the user info and the selected seats.
+![selectedSeats](https://github.com/zhengsz123/TicketService/blob/master/WebServiceDEMO/SelectedSeatsInSeatTable.png)
+![userInfoAfterReservation](https://github.com/zhengsz123/TicketService/blob/master/WebServiceDEMO/UserInfoAfterReservation'.png)
 
 	
 ### Testing Results
@@ -171,13 +177,17 @@ mvn compile test -Dspring.profiles.active=unit
 ```
 
 
-![testResults](https://github.com/vamshins/ticket-booking-service/blob/master/img/testResults.JPG)
+![testResults](https://github.com/zhengsz123/TicketService/blob/master/WebServiceDEMO/UnitTesting.png)
 
 ### DB Schema
 ---
 The application is designed using PostgreSql. Data migration using Flyway plugin.
 
 
-### Todo List
+### Todo List In The Future
 ---
-1.
+1. Create another spring boot module for the JMS listener to get the JMS message
+2. Separate domain, service,repo layer to another module and inject it into other worker modules to build microservice.
+3. The TicketService provided does not give user option to pick particular seats based on rows and col, with the row and col information stored in the database,
+I could let the user pick their desired seat, rather than assign them seats based on availability.
+4. Write more unit-test to make a better coverage for my webservice.
