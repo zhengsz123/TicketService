@@ -15,12 +15,12 @@ This application is developed using Spring Boot, Spring Data, Spring RESTful web
 
 ### Approach
 ---
-1. Created User and Seat object and created related table and col in database
-3. The relation between seat and user is many to one, the user_id will be the f_k and stores in the seat table.
-2. For Finding number of seats available method, I used spring data JPA to generate findSeatsByStatus query to return seats that SeatStatus = EMPTY.
-3. When holding the seats, for findAndHoldSeat, I gave the user certain numbers of seats and change the SeatStatus to HOLD, and save the user object in the seat table.
-4. For reserveSeats method, I got the list of seats that the SeatStatus = HOLD from the database from this user, change the status to reserved, and create the confirmation code for the user.
-4. Cancel holding mechanism: When executing findAndHoldSeatMethod, after 30s I will send a queue message to the JMS queue system. Once the JMS listener get the message, it will go
+1. Created User and Seat object, and created related table and col in the database.
+3. The relation between seat and user is many to one, the user_id will be the f_k and will be stored in the seat table.
+2. For findNumOfSeatsAvailable method, I used spring data JPA to generate findSeatsByStatus query to return seats that have SeatStatus = EMPTY.
+3. When holding the seats, for findAndHoldSeat method, I gave the user a certain numbers of seats and change the SeatStatus to HOLD, then save the user object in the seat table.
+4. For reserveSeats method, I got the list of seats that held by the user, change the status to reserved, and create the confirmation code for the user.
+4. 30 sec delay cancel holding mechanism: When executing findAndHoldSeatMethod, after 30s I will send a queue message to the JMS queue system. Once the JMS listener get the message, it will go
 check the user table if the current user has any confirmation code, if there's no confirmation code for the user, it is gonna roll back,
 which means all selected seats' status will become EMPTY again, and the corresponding user_id will become null again. 
 
@@ -103,9 +103,9 @@ Seat data seeded into database
 3.Find and hold the best available seats on behalf of a customer, 
 Note: each ticket hold should expire within 30 seconds.
 In the demo I pass numOfSeats as 2 and email as user's email using @PathPram.
-    ```
+    
         PATCH - http://localhost:8080/api/seat/status?numOfSeats=2&email=zhengsz@vt.edu   
-    ```
+    
  ResponseEntity:
 	
         {
@@ -181,7 +181,8 @@ The application is designed using PostgreSql. Data migration using Flyway plugin
 ### Todo List In The Future
 ---
 1. Create another spring boot module for the JMS listener to get the JMS message
-2. Separate domain, service,repo layer to another module and inject it into other worker modules to build microservice.
-3. The TicketService provided does not give user option to pick particular seats based on rows and col, with the row and col information stored in the database,
+2. Separate domain, service,repo layer to another module and inject it into other worker modules as a dependency to build microservice.
+3. The TicketService interface provided does not give user an option to pick particular seats based on rows and col, with the row and col information stored in the database,
 I could let the user pick their desired seat, rather than assign them seats based on availability.
 4. Write more unit-test to make a better coverage for my webservice.
+5. Create a docker image for my webservice.
