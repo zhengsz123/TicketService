@@ -93,24 +93,21 @@ Seat data seeded into database
     }
     ``` 
 
-2.	Find the number of seats available within the venue,
+2.Find the number of seats available within the venue,
 	Note: available seats are seats that are neither held nor reserved.
 	* Total seats available in all venues:
 	
-		```
 		GET - http://localhost:8080/api/seat/status
-		```
+		
  ![FindNumOfSeats](https://github.com/zhengsz123/TicketService/blob/master/WebServiceDEMO/findNumOfSeatsEmpty.png)
-3.	Find and hold the best available seats on behalf of a customer, 
-	Note: each ticket hold should expire within 30 seconds.
-	In the demo I pass numOfSeats as 2 and email as user's email using @PathPram.
+3.Find and hold the best available seats on behalf of a customer, 
+Note: each ticket hold should expire within 30 seconds.
+In the demo I pass numOfSeats as 2 and email as user's email using @PathPram.
+    ```
+        PATCH - http://localhost:8080/api/seat/status?numOfSeats=2&email=zhengsz@vt.edu   
+    ```
+ ResponseEntity:
 	
-	    ```
-	     PATCH - http://localhost:8080/api/seat/status?numOfSeats=2&email=zhengsz@vt.edu   
-	    ```
-	ResponseEntity:
-	```
-    [
         {
             "id": 5,
             "col": 5,
@@ -137,21 +134,19 @@ Seat data seeded into database
                 "confirmationCode": null
             }
         }
-    ]
 	  
-	```
 	
  ![findAndHoldSeats](https://github.com/zhengsz123/TicketService/blob/master/WebServiceDEMO/findAndHoldSeats.png)
 	
 4.This request will expire after 30 seconds. Before that, user has to reserve the seats using the web service in the following request.
 	Reserve and commit a specific group of held seats for a customer
 
-	    ```
-        PATCH - http://localhost:8080/api/user/confirmed?numOfSeats=2&email=zhengsz@vt.edu	
-        ```
+	    
+    PATCH - http://localhost:8080/api/user/confirmed?numOfSeats=2&email=zhengsz@vt.edu	
+        
 	
-	ResponseEntity:
-	```
+ResponseEntity:
+	
     {
         "id": 1,
         "firstName": "zhang",
@@ -159,7 +154,7 @@ Seat data seeded into database
         "email": "zhengsz@vt.edu",
         "confirmationCode": "a2fa2bce-4e69-4705-9826-1cc728d35594"
     }
-	```
+	
 ![reserveSeats](https://github.com/zhengsz123/TicketService/blob/master/WebServiceDEMO/reservedSeats.png)
 
 5.After the reservation, this is what we get from database for the user info and the selected seats.
