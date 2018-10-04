@@ -91,8 +91,7 @@ Seat data seeded into database
       "lastName" : "zhengshi",
       "email":"zhengsz@vt.edu"
     }
-    ```
- ![userSignedUp](https://github.com/zhengsz123/TicketService/blob/master/WebServiceDEMO/Seeded%20data.png)    
+    ``` 
 
 2.	Find the number of seats available within the venue,
 	Note: available seats are seats that are neither held nor reserved.
