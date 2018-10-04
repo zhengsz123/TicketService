@@ -48,25 +48,29 @@ which means all selected seats' status will become EMPTY again, and the correspo
    ```
 4. Create Unit database for unit testing
     ```
-     psql -h localhost -U admin -d postgres
+     psql -h localhost -U admin -d postgres;
      ```
-     ```
-     create database ticket_service_unit
-    ```
+Type password: password     
+
+     
+    create database ticket_service_unit
+    
+    \q
+    
 5. Schema migration for creating tables in database
      ```
-     mvn compile flyway:migrate -P prod -Ddb_url= localhost:5432/ticket_service_demo -Ddb_password=password -Ddb_username=admin
+     mvn compile flyway:migrate -P prod -Ddb_url=localhost:5432/ticket_service_demo -Ddb_password=password -Ddb_username=admin
      ```
      ```
-     mvn compile flyway:migrate -P unit -Ddb_url= localhost:5432/ticket_service_unit -Ddb_password=password -Ddb_username=admin
+     mvn compile flyway:migrate -P unit -Ddb_url=localhost:5432/ticket_service_unit -Ddb_password=password -Ddb_username=admin
      ```
 6.  Run the Seeding function to seed venue data in to the seat table.
     ```
-    mvn clean compile exec:java -Dspring.profiles.active=dev
+    mvn clean compile exec:java -Dspring.profiles.active=prod -Ddb.url=localhost -Ddb.port=5432 -Ddb.dName=ticket_service_demo -Ddb.username=admin -Ddb.password=password
 	```
 7. Package and Run the WebService jar type file to spin up the TicketService
     ```
-    mvn compile package -DskipTests=true && java -jar -Dspring.profiles.active=prod -Ddb.url=localhost -Ddb.port=5432 -Ddb.dName=ticket_service_demom -Ddb.username=admin -Ddb.password=password target/ticketservice-1.0-SNAPSHOT.jar  
+    mvn compile package -DskipTests=true && java -jar -Dspring.profiles.active=prod -Ddb.url=localhost -Ddb.port=5432 -Ddb.dName=ticket_service_demo -Ddb.username=admin -Ddb.password=password target/ticketservice-1.0-SNAPSHOT.jar  
     ```
 ### WebServiceDemo
 ---
