@@ -35,6 +35,7 @@ which means all selected seats' status will become EMPTY again, and the correspo
 2. Install docker if needed.
 
 3. Spin up the ActiveMq Artemis host using docker and leave it there.
+
       ```
       docker run -it --rm -e ENABLE_JMX=true -e JMX_PORT=1199 -e JMX_RMI_PORT=1198 -e ARTEMIS_USERNAME=admin -e ARTEMIS_PASSWORD=password123 -p61616:61616 -p8161:8161 vromero/activemq-artemis
       ```
@@ -59,20 +60,13 @@ which means all selected seats' status will become EMPTY again, and the correspo
      ```
      mvn compile flyway:migrate -P unit -Ddb_url= localhost:5432/ticket_service_unit -Ddb_password=password -Ddb_username=admin
      ```
-6. Packaging And Unit Testing the maven project use the first command, packaging without unit test use the second command
-     ```
-     mvn compile package
-     ```        
-     ```
-     mvn compile package -DskipTests=true
-     ```
-7.  Run the Seeding function to seed venue data in to the seat table.
+6.  Run the Seeding function to seed venue data in to the seat table.
     ```
     mvn clean compile exec:java -Dspring.profiles.active=dev
 	```
-8. Run the WebService jar type file to spin up the TicketService
+7. Package and Run the WebService jar type file to spin up the TicketService
     ```
-    java -jar target/ticketservice-1.0-SNAPSHOT.jar -Dspring.profiles.active=prod --spring.datasource.url=jdbc:postgresql://localhost:5432/ticker_service_demo --spring.datasource.username=admin --spring.datasource.password=password
+    mvn compile package -DskipTests=true && java -jar -Dspring.profiles.active=prod -Ddb.url=localhost -Ddb.port=5432 -Ddb.dName=ticket_service_demom -Ddb.username=admin -Ddb.password=password target/ticketservice-1.0-SNAPSHOT.jar  
     ```
 ### WebServiceDemo
 ---
@@ -167,7 +161,7 @@ ResponseEntity:
 Tests are done using JUnit and Mockito. Tests are run using the command
 
 ```
-mvn compile test -Dspring.profiles.active=unit
+mvn compile test -Dspring.profiles.active=unit -Ddb.url=localhost -Ddb.port=5432 -Ddb.dName=ticket_service_unit -Ddb.username=admin -Ddb.password=password
 ```
 
 

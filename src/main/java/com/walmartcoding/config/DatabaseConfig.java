@@ -24,22 +24,22 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "com.walmartcoding.repository")
 public class DatabaseConfig {
-    @Value("#{databaseProperties['db.username']}")
+    @Value("${db.username}")
     private String userName;
-    @Value("#{databaseProperties['db.password']}")
+    @Value("${db.password}")
     private String passWord;
-    @Value("#{databaseProperties['db.url']}")
+    @Value("${db.url}")
     private String url;
-    @Value("#{databaseProperties['db.driver']}")
-    private String driver;
-    @Value("#{databaseProperties['db.port']}")
+    @Value("${db.port}")
     private String port;
-    @Value("#{databaseProperties['db.dName']}")
+    @Value("${db.dName}")
     private String dName;
     @Value("#{databaseProperties['db.serverName']}")
     private String serverName;
     @Value("#{databaseProperties['db.jdbcPostgresql']}")
     private  String jdbc;
+    @Value("#{databaseProperties['db.driver']}")
+    private String driver;
 
 
     @Bean
