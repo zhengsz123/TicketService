@@ -31,26 +31,12 @@ public class TicketServiceImpl implements TicketService<Seat> {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-
-    public void insertSeatsData() {
-        for (Integer i = 1; i <= 9; i++) {
-            for (Integer j = 1; j <= 33; j++) {
-                Seat seat = new Seat();
-                seat.setRow(i);
-                seat.setCol(j);
-                seatsRepository.save(seat);
-                logger.debug("create seat with id: " + seat.getId());
-            }
-        }
-    }
-
     @Override
     @Transactional
     public int numSeatsAvailable() {
         Integer num = seatsRepository.countSeatsByStatus(SeatStatus.EMPTY.ordinal());
         return num;
     }
-
 
     @Transactional
     public void save(Seat seat){

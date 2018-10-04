@@ -1,5 +1,6 @@
 package com.walmartcoding.service;
 
+import com.walmartcoding.Utils.SeedData;
 import com.walmartcoding.config.AppConfig;
 import com.walmartcoding.config.DatabaseConfig;
 import com.walmartcoding.domain.Seat;
@@ -9,10 +10,8 @@ import com.walmartcoding.repository.SeatsRepository;
 import com.walmartcoding.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,11 +29,15 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@ContextConfiguration(classes = {AppConfig.class,DatabaseConfig.class})
+@ContextConfiguration(classes = {AppConfig.class, DatabaseConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-@TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class,TransactionalTestExecutionListener.class})
+@TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class})
 @ActiveProfiles("unit")
 public class SeatServiceTest {
+    @Value("#{databaseProperties['db.row']}")
+    private Integer row;
+    @Value("#{databaseProperties['db.col']}")
+    private Integer col;
 
     @Autowired
     private TicketService ticketService;
@@ -44,57 +47,73 @@ public class SeatServiceTest {
     private SeatsRepository seatsRepository;
     @Autowired
     private JmsTemplate jmsTemplate;
-
+    private String emailTest="test@test.com";
+    private String firstNameTest = "John";
+    private String lastNameTest="Doe";
     @Test
     @Transactional
-    public void insertSeatsDataTest(){
-        ticketService.insertSeatsData();
+    public void insertSeatsDataTest() {
+        SeedData seedData = new SeedData();
+        seedData.insertSeatsData();
         int seatsNum = seatsRepository.countSeatsByStatus(SeatStatus.EMPTY.ordinal());
-        assertEquals(33*9,seatsNum);
+        assertEquals(col*row, seatsNum);
     }
 
     @Test
     @Transactional
-    public void findAndHoldSeatsTest(){
+    public void findAndHoldSeatsTest() {
         Seat seat = new Seat();
         User user = new User();
-        user.setEmail("test@test.com");
-        user.setFirstName("john");
-        user.setLastName("doe");
+        user.setEmail(emailTest);
+        user.setFirstName(firstNameTest);
+        user.setLastName(lastNameTest);
         seat.setRow(1);
         seat.setCol(1);
         seat.setStatus(SeatStatus.EMPTY.ordinal());
         seat.setUser(user);
         userRepository.save(user);
         seatsRepository.save(seat);
-        List<Seat> seatList =  ticketService.findAndHoldSeats(1,"test@test.com");
-        assertEquals(SeatStatus.HOLD.ordinal(),seatList.get(0).getStatus().intValue());
-        verify(jmsTemplate,times(1)).convertAndSend(anyString(),anyString());
+        List<Seat> seatList = ticketService.findAndHoldSeats(1, emailTest);
+        assertEquals(SeatStatus.HOLD.ordinal(), seatList.get(0).getStatus().intValue());
+        verify(jmsTemplate, times(1)).convertAndSend(anyString(), anyString());
     }
+
     @Test
     @Transactional
-    public void reserveSeatsTest(){
-    Seat seat = new Seat();
-    User user = new User();
-    user.setEmail("test@test.com");
-    user.setFirstName("john");
-    user.setLastName("doe");
-    seat.setRow(1);
-    seat.setCol(1);
-    seat.setStatus(SeatStatus.HOLD.ordinal());
-    seat.setUser(user);
-    userRepository.save(user);
-    seatsRepository.save(seat);
-    ticketService.reserveSeats(1,"test@test.com");
-        assertEquals(SeatStatus.RESERVERED.ordinal(),seatsRepository.findByUser(userRepository.findByEmail("test@test.com").
+    public void reserveSeatsTest() {
+        Seat seat = new Seat();
+        User user = new User();
+        user.setEmail(emailTest);
+        user.setFirstName(firstNameTest);
+        user.setLastName(lastNameTest);
+        seat.setRow(1);
+        seat.setCol(1);
+        seat.setStatus(SeatStatus.HOLD.ordinal());
+        seat.setUser(user);
+        userRepository.save(user);
+        seatsRepository.save(seat);
+        ticketService.reserveSeats(1, emailTest);
+        assertEquals(SeatStatus.RESERVERED.ordinal(), seatsRepository.findByUser(userRepository.findByEmail(emailTest).
                 getId()).get(0).getStatus().intValue());
-        assertNotNull(userRepository.findByEmail("test@test.com").getConfirmationCode());
+        assertNotNull(userRepository.findByEmail(emailTest).getConfirmationCode());
     }
 
     @Test
     @Transactional
-    public void receiveMessageTest(){
-
+    public void receiveMessageTest() {
+        Seat seat = new Seat();
+        User user = new User();
+        user.setEmail(emailTest);
+        user.setFirstName(firstNameTest);
+        user.setLastName(lastNameTest);
+        seat.setRow(1);
+        seat.setCol(1);
+        seat.setStatus(SeatStatus.HOLD.ordinal());
+        seat.setUser(user);
+        userRepository.save(user);
+        seatsRepository.save(seat);
+        ticketService.receiveMessage(emailTest);
+        assertEquals(SeatStatus.EMPTY.ordinal(), seatsRepository.findAll().get(0).getStatus().intValue());
     }
 
 }

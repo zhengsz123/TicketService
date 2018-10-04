@@ -3,7 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.walmartcoding</groupId>
     <artifactId>ticketservice</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -22,12 +21,11 @@
         <flyway.version>5.1.1</flyway.version>
         <org.slf4j-version>1.7.25</org.slf4j-version>
         <mockito.version>2.19.0</mockito.version>
+        <spring.boot.mainclass>com.walmartcoding.ApiCoreBootApplication</spring.boot.mainclass>
     </properties>
 
     <build>
-        <finalName>api-core</finalName>
         <plugins>
-
             <!--flyway database migration -->
             <plugin>
                 <groupId>org.flywaydb</groupId>
@@ -36,7 +34,7 @@
                 <configuration>
                     <driver>org.postgresql.Driver</driver>
                     <!--url parameterize-->
-                    <url>jdbc:postgresql://localhost:5432/devtest1</url>
+                    <url>jdbc:postgresql://localhost:5432/devtest4</url>
                     <user>admin</user>
                     <password>password</password>
                     <locations>
@@ -47,6 +45,16 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>${spring.boot.mainclass}</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

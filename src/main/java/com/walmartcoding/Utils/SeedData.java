@@ -1,14 +1,23 @@
-//package com.walmartcoding.Utils;
-//
-//import com.walmartcoding.service.TicketServiceImpl;
-//import org.springframework.beans.factory.annotation.Autowired;
-//
-//public class SeedData {
-//    @Autowired
-//    private TicketServiceImpl ticketServiceImpl;
-//
-//    public static void main(String[] args){
-//        SeedData seedData = new SeedData();
-//        seedData.ticketServiceImpl.insertSeatsData();
-//    }
-//}
+package com.walmartcoding.Utils;
+
+import com.walmartcoding.domain.Seat;
+import com.walmartcoding.repository.SeatsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class SeedData {
+    @Autowired
+    private SeatsRepository seatsRepository;
+
+    public void insertSeatsData() {
+        for (Integer i = 1; i <= 9; i++) {
+            for (Integer j = 1; j <= 33; j++) {
+                Seat seat = new Seat();
+                seat.setRow(i);
+                seat.setCol(j);
+                seatsRepository.save(seat);
+            }
+        }
+    }
+}

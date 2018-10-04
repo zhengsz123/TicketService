@@ -4,7 +4,6 @@ import com.walmartcoding.domain.Seat;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,4 +15,6 @@ public interface SeatsRepository extends CrudRepository<Seat, Long> {
 
     @Query ("select a from Seat a where a.user.id = ?1")
     List<Seat> findByUser(Long userId);
+
+    List<Seat> findAll();
 }

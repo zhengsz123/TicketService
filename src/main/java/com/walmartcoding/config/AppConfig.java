@@ -15,7 +15,7 @@ public class AppConfig {
     private Environment env;
 
     @Bean("databaseProperties")
-    public PropertiesFactoryBean dbProperties() throws Exception {
+    public PropertiesFactoryBean dbProperties() {
         String profile = env.getActiveProfiles()[0];
         PropertiesFactoryBean bean = new PropertiesFactoryBean();
         bean.setLocation(new ClassPathResource("env/" + profile + "-db.properties"));
