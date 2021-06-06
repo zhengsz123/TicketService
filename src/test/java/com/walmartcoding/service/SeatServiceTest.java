@@ -40,7 +40,7 @@ public class SeatServiceTest {
     private Integer col;
 
     @Autowired
-    private TicketService ticketService;
+    private TicketService<Seat> ticketService;
     @Autowired
     private UserRepository userRepository;
     @Autowired

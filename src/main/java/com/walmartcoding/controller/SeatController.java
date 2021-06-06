@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping(value = {"/api/seat"}, produces = MediaType.APPLICATION_JSON_VALUE)
 public class SeatController {
     @Autowired
-    private TicketService ticketServiceImpl;
+    private TicketService<Seat> ticketServiceImpl;
 
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     public String getSeatStatus() {

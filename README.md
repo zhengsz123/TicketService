@@ -44,7 +44,7 @@ which means all selected seats' status will become EMPTY again, and the correspo
     docker pull postgres
     ```
     ```
-    docker run --name ticketserviceDemo -e POSTGRES_DB=ticket_service_Demo -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres
+    docker run --name ticketserviceDemo -e POSTGRES_DB=ticket_service_demo -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres
    ```
 4. Create Unit database for unit testing
     ```
@@ -53,7 +53,7 @@ which means all selected seats' status will become EMPTY again, and the correspo
 Type password: password     
 
      
-    create database ticket_service_unit
+    create database ticket_service_unit;
     
     \q
     
